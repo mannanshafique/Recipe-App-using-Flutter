@@ -1,6 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:recipe_app/Models/CategoryModel.dart';
+
+import 'Networking/CategoriesHttp.dart';
 
 class MyHomePage extends StatelessWidget {
   @override
@@ -18,28 +21,22 @@ class HomePageBody extends StatefulWidget {
 }
 
 class _HomePageBodyState extends State<HomePageBody> {
-  final List<Image> _listViewData = [
-    Image.network(
-        "https://www.themealdb.com/images/media/meals/c9a3l31593261890.jpg"),
-    Image.network(
-        "https://www.themealdb.com/images/media/meals/c9a3l31593261890.jpg"),
-    Image.network(
-        "https://www.themealdb.com/images/media/meals/c9a3l31593261890.jpg"),
-    Image.network(
-        "https://www.themealdb.com/images/media/meals/c9a3l31593261890.jpg"),
-    Image.network(
-        "https://www.themealdb.com/images/media/meals/c9a3l31593261890.jpg"),
-    Image.network(
-        "https://www.themealdb.com/images/media/meals/c9a3l31593261890.jpg"),
-    Image.network(
-        "https://www.themealdb.com/images/media/meals/c9a3l31593261890.jpg"),
-    Image.network(
-        "https://www.themealdb.com/images/media/meals/c9a3l31593261890.jpg"),
-    Image.network(
-        "https://www.themealdb.com/images/media/meals/c9a3l31593261890.jpg"),
-    Image.network(
-        "https://www.themealdb.com/images/media/meals/c9a3l31593261890.jpg"),
-  ];
+  List<Categories> categories = List<Categories>();
+  bool _isLoading = true;
+  @override
+  void initState() {
+    super.initState();
+    getCategories();
+  }
+
+  getCategories() async {
+    CategoryFood categoryNetworkingClass = CategoryFood();
+    await categoryNetworkingClass.getCategories();
+    categories = categoryNetworkingClass.categories;
+    setState(() {
+      _isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,49 +115,65 @@ class _HomePageBodyState extends State<HomePageBody> {
                     fontWeight: FontWeight.bold),
               ),
             ),
-            Container(
-              // color: Colors.black.withOpacity(0.5),
-              height: MediaQuery.of(context).size.height * 0.6,
-              width: MediaQuery.of(context).size.width,
-              child: GridView.count(
-                shrinkWrap: true,
-                physics: ClampingScrollPhysics(),
-                crossAxisCount: 3,
-                padding: EdgeInsets.all(8.0),
-                crossAxisSpacing: 8.0,
-                mainAxisSpacing: 5.0,
-                children: _listViewData
-                    .map((data) => Card(
-                        elevation: 5,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                        color: Colors.white,
-                        child: Column(
-                          children: <Widget>[
-                            Expanded(
-                              child: Container(
-                                child: Image.network(
-                                  "https://www.themealdb.com/images/ingredients/Chicken.png",
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              "name",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            SizedBox(
-                              height: 9,
-                            )
-                          ],
-                        )))
-                    .toList(),
-              ),
-            ),
+            _isLoading
+                ? Container(
+                    height: MediaQuery.of(context).size.height,
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: CircularProgressIndicator(),
+                    ))
+                : BottomGridView(categories: categories),
           ],
         ),
       ),
     );
+  }
+}
+
+class BottomGridView extends StatelessWidget {
+  const BottomGridView({
+    Key key,
+    @required this.categories,
+  }) : super(key: key);
+
+  final List<Categories> categories;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        // color: Colors.black.withOpacity(0.5),
+        height: MediaQuery.of(context).size.height * 0.6,
+        width: MediaQuery.of(context).size.width,
+        child: GridView.builder(
+            itemCount: categories.length,
+            gridDelegate:
+                SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+            itemBuilder: (BuildContext context, int index) {
+              return Card(
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  color: Colors.white,
+                  child: Column(
+                    children: <Widget>[
+                      Expanded(
+                        child: Container(
+                            margin: EdgeInsets.all(10),
+                            child: Image.network(
+                              categories[index].strCategoryThumb,
+                              fit: BoxFit.fill,
+                            )),
+                      ),
+                      Text(
+                        categories[index].strCategory,
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      SizedBox(
+                        height: 9,
+                      )
+                    ],
+                  ));
+            }));
   }
 }
 
@@ -212,6 +225,41 @@ class HorizontalView extends StatelessWidget {
     );
   }
 }
+
+// GridView.count(
+//                 shrinkWrap: true,
+//                 physics: ClampingScrollPhysics(),
+//                 crossAxisCount: 3,
+//                 padding: EdgeInsets.all(8.0),
+//                 crossAxisSpacing: 8.0,
+//                 mainAxisSpacing: 5.0,
+//                 children: _listViewData
+//                     .map((data) => Card(
+//                         elevation: 5,
+//                         shape: RoundedRectangleBorder(
+//                             borderRadius: BorderRadius.circular(12)),
+//                         color: Colors.white,
+//                         child: Column(
+//                           children: <Widget>[
+//                             Expanded(
+//                               child: Container(
+//                                 child: Image.network(
+//                                   "https://www.themealdb.com/images/ingredients/Chicken.png",
+//                                   fit: BoxFit.cover,
+//                                 ),
+//                               ),
+//                             ),
+//                             Text(
+//                               "name",
+//                               style: TextStyle(color: Colors.black),
+//                             ),
+//                             SizedBox(
+//                               height: 9,
+//                             )
+//                           ],
+//                         )))
+//                     .toList(),
+//               ),
 
 // class HorizontalView extends StatelessWidget {
 //   @override
