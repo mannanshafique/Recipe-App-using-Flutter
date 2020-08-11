@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:recipe_app/CategoryVIew.dart';
 import 'package:recipe_app/Models/CategoryModel.dart';
 
 import 'Networking/CategoriesHttp.dart';
@@ -140,6 +141,22 @@ class BottomGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    getItemAndNavigate(int item, BuildContext context) {
+      String categoryname = categories[item].strCategory;
+      String categoryDesc = categories[item].strCategoryDescription;
+      String categoryThumb = categories[item].strCategoryThumb;
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => CategoryView(
+                    categories: categories,
+                    intial: item,
+                    categoryname: categoryname,
+                    categoryDesc: categoryDesc,
+                    categoryThumb: categoryThumb,
+                  )));
+    }
+
     return Container(
         // color: Colors.black.withOpacity(0.5),
         height: MediaQuery.of(context).size.height * 0.6,
@@ -149,30 +166,35 @@ class BottomGridView extends StatelessWidget {
             gridDelegate:
                 SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
             itemBuilder: (BuildContext context, int index) {
-              return Card(
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  color: Colors.white,
-                  child: Column(
-                    children: <Widget>[
-                      Expanded(
-                        child: Container(
-                            margin: EdgeInsets.all(10),
-                            child: Image.network(
-                              categories[index].strCategoryThumb,
-                              fit: BoxFit.fill,
-                            )),
-                      ),
-                      Text(
-                        categories[index].strCategory,
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      SizedBox(
-                        height: 9,
-                      )
-                    ],
-                  ));
+              return GestureDetector(
+                onTap: () {
+                  getItemAndNavigate(index, context);
+                },
+                child: Card(
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    color: Colors.white,
+                    child: Column(
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                              margin: EdgeInsets.all(10),
+                              child: Image.network(
+                                categories[index].strCategoryThumb,
+                                fit: BoxFit.fill,
+                              )),
+                        ),
+                        Text(
+                          categories[index].strCategory,
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        SizedBox(
+                          height: 9,
+                        )
+                      ],
+                    )),
+              );
             }));
   }
 }
