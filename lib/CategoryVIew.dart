@@ -3,19 +3,26 @@ import 'package:recipe_app/Models/FilterCategory.dart';
 import 'package:recipe_app/Networking/FilterCategory.dart';
 import 'Models/CategoryModel.dart';
 
+List<FilterCategory> filterCategoryModels = [];
+
 class CategoryView extends StatefulWidget {
   final List<Categories> categories;
   final int intial;
   final String categoryname;
-  final String categoryDesc;
-  final String categoryThumb;
+  // final String categoryDesc;
+  // final String categoryThumb;
 
-  CategoryView(
-      {@required this.categories,
-      this.intial,
-      this.categoryname,
-      this.categoryDesc,
-      this.categoryThumb});
+  CategoryView({
+    @required this.categories,
+    this.intial,
+    this.categoryname,
+  });
+  // CategoryView(
+  // {@required this.categories,
+  // this.intial,
+  // this.categoryname,
+  // this.categoryDesc,
+  // this.categoryThumb});
 
   @override
   _CategoryViewState createState() => _CategoryViewState();
@@ -24,7 +31,7 @@ class CategoryView extends StatefulWidget {
 class _CategoryViewState extends State<CategoryView>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
-
+  // List<FilterCategory> filterCategoryModel = [];
   @override
   void initState() {
     super.initState();
@@ -32,21 +39,29 @@ class _CategoryViewState extends State<CategoryView>
         vsync: this,
         length: widget.categories.length,
         initialIndex: widget.intial);
-    getCategoryItems();
+    getCategoryItems(widget.categoryname);
   }
 
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 //
-  List<FilterCategory> filterCategoryModel = List<FilterCategory>();
+
   bool _isLoading = true;
 
-  getCategoryItems() async {
+  getCategoryItems(String name) async {
     CategoryFood categoryfetchClass = CategoryFood();
-    await categoryfetchClass.getFilterCategories(widget.categoryname);
-    filterCategoryModel = categoryfetchClass.filtercategories;
+
+    await categoryfetchClass.getFilterCategories(name);
+    filterCategoryModels = categoryfetchClass.filtercategories;
     setState(() {
       _isLoading = false;
     });
   }
+
+  // List<String> categoname = [];
 
 //
   @override
@@ -54,6 +69,7 @@ class _CategoryViewState extends State<CategoryView>
     List<Tab> tabs = new List<Tab>();
 
     for (int i = 0; i < widget.categories.length; i++) {
+      // categoname.add(widget.categories[i].strCategory);
       tabs.add(Tab(
         child: Text(
           widget.categories[i].strCategory,
@@ -63,6 +79,7 @@ class _CategoryViewState extends State<CategoryView>
     }
 
     return DefaultTabController(
+      initialIndex: widget.intial,
       length: widget.categories.length,
       child: Scaffold(
         appBar: AppBar(
@@ -90,33 +107,50 @@ class _CategoryViewState extends State<CategoryView>
         ),
         body: Container(
           child: TabBarView(
+            physics: ClampingScrollPhysics(),
             children: [
               Viewer(
-                item: filterCategoryModel,
-                categoryDesc: widget.categoryDesc,
-                categoryThumb: widget.categoryThumb,
+                categoryname: 'Beef',
               ),
               Viewer(
-                item: filterCategoryModel,
-                categoryDesc: widget.categoryDesc,
-                categoryThumb: widget.categoryThumb,
+                categoryname: 'Chicken',
               ),
               Viewer(
-                item: filterCategoryModel,
-                categoryDesc: widget.categoryDesc,
-                categoryThumb: widget.categoryThumb,
+                categoryname: 'Dessert',
               ),
-              Viewer(),
-              Viewer(),
-              Viewer(),
-              Viewer(),
-              Viewer(),
-              Viewer(),
-              Viewer(),
-              Viewer(),
-              Viewer(),
-              Viewer(),
-              Viewer(),
+              Viewer(
+                categoryname: 'Lamb',
+              ),
+              Viewer(
+                categoryname: 'Miscellaneous',
+              ),
+              Viewer(
+                categoryname: 'Pasta',
+              ),
+              Viewer(
+                categoryname: 'Pork',
+              ),
+              Viewer(
+                categoryname: 'Seafood',
+              ),
+              Viewer(
+                categoryname: 'Side',
+              ),
+              Viewer(
+                categoryname: 'Starter',
+              ),
+              Viewer(
+                categoryname: 'Vegan',
+              ),
+              Viewer(
+                categoryname: 'Vegetarian',
+              ),
+              Viewer(
+                categoryname: 'Breakfast',
+              ),
+              Viewer(
+                categoryname: 'Goat',
+              ),
             ],
             controller: _tabController,
           ),
@@ -126,12 +160,38 @@ class _CategoryViewState extends State<CategoryView>
   }
 }
 
-class Viewer extends StatelessWidget {
-  final String categoryDesc;
-  final String categoryThumb;
-  final List<FilterCategory> item;
+class Viewer extends StatefulWidget {
+  final String categoryname;
+  // final String categoryThumb;
+  // final List<FilterCategory> item;
 
-  Viewer({this.item, this.categoryDesc, this.categoryThumb});
+  // Viewer({this.item, this.categoryname, this.categoryThumb});
+  Viewer({this.categoryname});
+
+  @override
+  _ViewerState createState() => _ViewerState();
+}
+
+class _ViewerState extends State<Viewer> {
+  @override
+  void initState() {
+    super.initState();
+    getCategoryItems();
+  }
+
+  @override
+  void dispose() {
+    // filterCategoryModels.clear();
+    super.dispose();
+  }
+
+  getCategoryItems() async {
+    CategoryFood categoryfetchClass = CategoryFood();
+
+    await categoryfetchClass.getFilterCategories(widget.categoryname);
+    filterCategoryModels = categoryfetchClass.filtercategories;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -147,7 +207,9 @@ class Viewer extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10.0),
                   color: Colors.black,
                   image: DecorationImage(
-                      image: NetworkImage(categoryThumb), fit: BoxFit.fill)),
+                      image: NetworkImage(
+                          'https://www.themealdb.com/images/media/meals/7mxnzz1593350801.jpg'),
+                      fit: BoxFit.fill)),
               child: Container(
                 padding: EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -159,7 +221,9 @@ class Viewer extends StatelessWidget {
                   children: <Widget>[
                     Expanded(
                       flex: 1,
-                      child: Image.network(categoryThumb, fit: BoxFit.fill),
+                      child: Image.network(
+                          'https://www.themealdb.com/images/media/meals/7mxnzz1593350801.jpg',
+                          fit: BoxFit.fill),
                     ),
                     SizedBox(
                       width: 35,
@@ -171,7 +235,7 @@ class Viewer extends StatelessWidget {
                           child: Wrap(
                             children: <Widget>[
                               Text(
-                                categoryDesc,
+                                widget.categoryname,
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w400),
@@ -192,7 +256,7 @@ class Viewer extends StatelessWidget {
                   shrinkWrap: true,
                   physics: BouncingScrollPhysics(),
                   scrollDirection: Axis.vertical,
-                  itemCount: item.length,
+                  itemCount: filterCategoryModels.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisSpacing: 8,
                       mainAxisSpacing: 8,
@@ -215,7 +279,8 @@ class Viewer extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(12),
                                       image: DecorationImage(
                                           image: NetworkImage(
-                                              item[index].strMealThumb),
+                                              filterCategoryModels[index]
+                                                  .strMealThumb),
                                           fit: BoxFit.fill)),
                                 ),
                               ),
@@ -223,7 +288,7 @@ class Viewer extends StatelessWidget {
                                 height: 5,
                               ),
                               Text(
-                                item[index].strMeal,
+                                filterCategoryModels[index].strMeal,
                                 style: TextStyle(color: Colors.black),
                               ),
                               SizedBox(

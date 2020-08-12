@@ -143,8 +143,8 @@ class BottomGridView extends StatelessWidget {
   Widget build(BuildContext context) {
     getItemAndNavigate(int item, BuildContext context) {
       String categoryname = categories[item].strCategory;
-      String categoryDesc = categories[item].strCategoryDescription;
-      String categoryThumb = categories[item].strCategoryThumb;
+      // String categoryDesc = categories[item].strCategoryDescription;
+      // String categoryThumb = categories[item].strCategoryThumb;
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -152,8 +152,8 @@ class BottomGridView extends StatelessWidget {
                     categories: categories,
                     intial: item,
                     categoryname: categoryname,
-                    categoryDesc: categoryDesc,
-                    categoryThumb: categoryThumb,
+                    // categoryDesc: categoryDesc,
+                    // categoryThumb: categoryThumb,
                   )));
     }
 
