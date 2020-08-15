@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:recipe_app/Models/FilterCategory.dart';
 
-class CategoryFood {
+class CategoryFoodwithCategory {
   List<FilterCategory> filtercategories = [];
 
   Future<void> getFilterCategories(String categoryName) async {
