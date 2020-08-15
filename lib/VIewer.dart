@@ -4,12 +4,9 @@ import 'package:recipe_app/Networking/FilterCategory.dart';
 
 class Viewer extends StatefulWidget {
   final String categoryname;
-
-  // final String categoryThumb;
-  // final List<FilterCategory> item;
-
-  // Viewer({this.item, this.categoryname, this.categoryThumb});
-  Viewer({this.categoryname});
+  final String categoryDesc;
+  final String categoryThumb;
+  Viewer({this.categoryname, this.categoryDesc, this.categoryThumb});
 
   @override
   _ViewerState createState() => _ViewerState();
@@ -21,14 +18,6 @@ class _ViewerState extends State<Viewer> {
   @override
   void initState() {
     super.initState();
-
-    print(filter);
-    getCategoryItems();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
     getCategoryItems();
   }
 
@@ -55,8 +44,7 @@ class _ViewerState extends State<Viewer> {
                   borderRadius: BorderRadius.circular(10.0),
                   color: Colors.black,
                   image: DecorationImage(
-                      image: NetworkImage(
-                          'https://www.themealdb.com/images/media/meals/7mxnzz1593350801.jpg'),
+                      image: NetworkImage(widget.categoryThumb),
                       fit: BoxFit.fill)),
               child: Container(
                 padding: EdgeInsets.all(12),
@@ -64,34 +52,37 @@ class _ViewerState extends State<Viewer> {
                   borderRadius: BorderRadius.circular(10.0),
                   color: Color(0xff630118).withOpacity(0.92),
                 ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Expanded(
-                      flex: 1,
-                      child: Image.network(
-                          'https://www.themealdb.com/images/media/meals/7mxnzz1593350801.jpg',
-                          fit: BoxFit.fill),
-                    ),
-                    SizedBox(
-                      width: 35,
-                    ),
-                    Expanded(
-                        flex: 2,
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 5, right: 2),
-                          child: Wrap(
-                            children: <Widget>[
-                              Text(
-                                widget.categoryname,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w400),
-                              )
-                            ],
-                          ),
-                        ))
-                  ],
+                child: SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Expanded(
+                        flex: 1,
+                        child: Image.network(widget.categoryThumb,
+                            fit: BoxFit.fill),
+                      ),
+                      SizedBox(
+                        width: 35,
+                      ),
+                      Expanded(
+                          flex: 2,
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 5, right: 2),
+                            child: Wrap(
+                              children: <Widget>[
+                                Text(
+                                  widget.categoryDesc,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w400),
+                                )
+                              ],
+                            ),
+                          ))
+                    ],
+                  ),
                 ),
               ),
             ),

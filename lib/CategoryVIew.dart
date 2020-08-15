@@ -10,20 +10,15 @@ class CategoryView extends StatefulWidget {
   final List<Categories> categories;
   final int intial;
   final String categoryname;
-  // final String categoryDesc;
-  // final String categoryThumb;
+  final String categoryDesc;
+  final String categoryThumb;
 
-  CategoryView({
-    @required this.categories,
-    this.intial,
-    this.categoryname,
-  });
-  // CategoryView(
-  // {@required this.categories,
-  // this.intial,
-  // this.categoryname,
-  // this.categoryDesc,
-  // this.categoryThumb});
+  CategoryView(
+      {@required this.categories,
+      this.intial,
+      this.categoryname,
+      this.categoryDesc,
+      this.categoryThumb});
 
   @override
   _CategoryViewState createState() => _CategoryViewState();
@@ -66,15 +61,13 @@ class _CategoryViewState extends State<CategoryView>
     });
   }
 
-  // List<String> categoname = [];
-
-//
   @override
   Widget build(BuildContext context) {
     List<Tab> tabs = new List<Tab>();
 
     for (int i = 0; i < widget.categories.length; i++) {
       // categoname.add(widget.categories[i].strCategory);
+
       tabs.add(Tab(
         child: Text(
           widget.categories[i].strCategory,
@@ -102,10 +95,11 @@ class _CategoryViewState extends State<CategoryView>
             "Category",
             style: TextStyle(color: Color(0xff630118)),
           ),
+          bottomOpacity: 0.6,
           bottom: TabBar(
             controller: _tabController,
             indicatorColor: Color(0xff630118),
-            labelPadding: EdgeInsets.only(right: 20),
+            labelPadding: EdgeInsets.symmetric(horizontal: 10),
             isScrollable: true,
             tabs: tabs,
           ),
@@ -116,45 +110,73 @@ class _CategoryViewState extends State<CategoryView>
             children: [
               Viewer(
                 categoryname: 'Beef',
+                categoryDesc: widget.categories[0].strCategoryDescription,
+                categoryThumb: widget.categories[0].strCategoryThumb,
               ),
               Viewer(
                 categoryname: 'Chicken',
+                categoryDesc: widget.categories[1].strCategoryDescription,
+                categoryThumb: widget.categories[1].strCategoryThumb,
               ),
               Viewer(
                 categoryname: 'Dessert',
+                categoryDesc: widget.categories[2].strCategoryDescription,
+                categoryThumb: widget.categories[2].strCategoryThumb,
               ),
               Viewer(
                 categoryname: 'Lamb',
+                categoryDesc: widget.categories[3].strCategoryDescription,
+                categoryThumb: widget.categories[3].strCategoryThumb,
               ),
               Viewer(
                 categoryname: 'Miscellaneous',
+                categoryDesc: widget.categories[4].strCategoryDescription,
+                categoryThumb: widget.categories[4].strCategoryThumb,
               ),
               Viewer(
                 categoryname: 'Pasta',
+                categoryDesc: widget.categories[5].strCategoryDescription,
+                categoryThumb: widget.categories[5].strCategoryThumb,
               ),
               Viewer(
                 categoryname: 'Pork',
+                categoryDesc: widget.categories[6].strCategoryDescription,
+                categoryThumb: widget.categories[6].strCategoryThumb,
               ),
               Viewer(
                 categoryname: 'Seafood',
+                categoryDesc: widget.categories[7].strCategoryDescription,
+                categoryThumb: widget.categories[7].strCategoryThumb,
               ),
               Viewer(
                 categoryname: 'Side',
+                categoryDesc: widget.categories[8].strCategoryDescription,
+                categoryThumb: widget.categories[8].strCategoryThumb,
               ),
               Viewer(
                 categoryname: 'Starter',
+                categoryDesc: widget.categories[9].strCategoryDescription,
+                categoryThumb: widget.categories[9].strCategoryThumb,
               ),
               Viewer(
                 categoryname: 'Vegan',
+                categoryDesc: widget.categories[10].strCategoryDescription,
+                categoryThumb: widget.categories[10].strCategoryThumb,
               ),
               Viewer(
                 categoryname: 'Vegetarian',
+                categoryDesc: widget.categories[11].strCategoryDescription,
+                categoryThumb: widget.categories[11].strCategoryThumb,
               ),
               Viewer(
                 categoryname: 'Breakfast',
+                categoryDesc: widget.categories[12].strCategoryDescription,
+                categoryThumb: widget.categories[12].strCategoryThumb,
               ),
               Viewer(
                 categoryname: 'Goat',
+                categoryDesc: widget.categories[13].strCategoryDescription,
+                categoryThumb: widget.categories[13].strCategoryThumb,
               ),
               // Practice(
               //   categoryname: 'Beef',
